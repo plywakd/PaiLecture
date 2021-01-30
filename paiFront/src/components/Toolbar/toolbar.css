@@ -4,11 +4,6 @@
 	border: 1px solid grey;
 	border-radius: 5px;
 }
-.toolbar-item:first-child{
-	flex-grow:1;
-	text-align:center;
-	order:1;
-}
 .logo{
 	width: 80px;
 	height: 80px;

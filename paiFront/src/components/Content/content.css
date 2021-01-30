@@ -2,7 +2,7 @@
 	margin: 5px 5px 5px 5px;
 	border: 2px solid blue;
 	border-radius: 5px;
-	flex-grow:8;
+	min-height: 50uv;
 }
 .user-menu-container{
     margin: 5px 5px 5px 5px;

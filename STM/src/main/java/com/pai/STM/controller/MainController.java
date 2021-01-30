@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 public class MainController {
 
@@ -24,13 +25,18 @@ public class MainController {
         this.taskService = taskService;
     }
 
-    @PutMapping(value = "/account")
-    public void createAccount(
-            @RequestParam("name") String name,
-            @RequestParam("lastName") String lastName,
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
-        accountService.createAccount(new Account(name, lastName, email, password));
+//    @PostMapping(value = "/account")
+//    public void createAccount(
+//            @RequestParam("name") String name,
+//            @RequestParam("lastName") String lastName,
+//            @RequestParam("email") String email,
+//            @RequestParam("password") String password) {
+//        accountService.createAccount(new Account(name, lastName, email, password));
+//    }
+
+    @PostMapping(value = "/account")
+    public void createAccount(@RequestBody Account acc) {
+        accountService.createAccount(new Account(acc.getName(), acc.getLastName(), acc.getEmail(), acc.getPassword()));
     }
 
     @GetMapping(value = "/accounts")
@@ -72,15 +78,22 @@ public class MainController {
         return taskService.getAllTasks();
     }
 
-    @PostMapping(value = "/task/add")
-    public Task createNewTask(
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("type") Type type,
-            @RequestParam("status") Status status,
-            @RequestParam("account") Integer accountId
-    ) {
-        return taskService.createTask(title, description, type, status, accountId);
+    //    @PostMapping(value = "/task")
+//    public Task createNewTask(
+//            @RequestParam("title") String title,
+//            @RequestParam("description") String description,
+//            @RequestParam("type") Type type,
+//            @RequestParam("status") Status status,
+//            @RequestParam("account") Integer accountId
+//    ) {
+//        return taskService.createTask(title, description, type, status, accountId);
+//    }
+    @PostMapping(value = "/task")
+    public Task createNewTask(@RequestBody Task task) {
+        System.out.println(task.getStatus());
+        return taskService.createTask(
+                task.getTitle(), task.getDescription(), task.getType(), task.getStatus(),
+                task.getAssignedAccount().getAccountId());
     }
 
     @GetMapping(value = "/task")

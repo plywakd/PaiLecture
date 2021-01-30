@@ -1,7 +1,6 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './content.css';
-import axios from 'axios';
 
 class Content extends React.Component{
 
@@ -18,8 +17,8 @@ class Content extends React.Component{
 
 	render() {
 		return (
-			<div>
-				<h1>content</h1>
+			<div className="container">
+				<h1>Welcome on homepage</h1>
 			</div>			
 		);
 	}
