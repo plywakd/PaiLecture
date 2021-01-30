@@ -1,0 +1,9 @@
+.main-container{
+	border: 1px solid green;
+}
+.row-container{
+	display: flex;
+	flex-direction:row;
+	flex-wrap:wrap;
+	width:100%;
+}

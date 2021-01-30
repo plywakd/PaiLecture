@@ -1,0 +1,28 @@
+.container{
+	margin: 5px 5px 5px 5px;
+	border: 2px solid blue;
+	border-radius: 5px;
+	flex-grow:8;
+}
+.user-menu-container{
+    margin: 5px 5px 5px 5px;
+	border: 1px solid red;
+	border-radius: 5px;
+	flex-grow:1;
+}
+.btn-container{
+	display:flex;
+	flex-direction:column;
+}
+.row-container {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 100%;
+}
+.user-menu { 
+	flex-basis:20%;
+}
+.content-menu {
+	flex-basis:80%;
+}
