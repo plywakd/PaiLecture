@@ -9,6 +9,8 @@ import com.pai.STM.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,5 +118,22 @@ public class MainController {
     @DeleteMapping(value = "/task/delete")
     public String deleteTask(@RequestParam("id") Integer id) {
         return taskService.deleteTask(id);
+    }
+
+    @GetMapping(value = "/task/statuses")
+    public List<String> getTaskStatuses(){
+        List<Status> statusEnum = Arrays.asList(Status.values());
+        List<String> statuses = new ArrayList<>();
+        statusEnum.forEach(status-> statuses.add(status.toString()));
+        return statuses;
+    }
+
+    @GetMapping(value="/task/types")
+    public List<String> getTaskTypes(){
+        System.out.println(Type.values());
+        List<Type> typeEnums = Arrays.asList(Type.values());
+        List<String> types = new ArrayList<>();
+        typeEnums.forEach(type-> types.add(type.toString()));
+        return types;
     }
 }
