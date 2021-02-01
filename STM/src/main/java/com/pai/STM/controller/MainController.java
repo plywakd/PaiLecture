@@ -10,6 +10,8 @@ import com.pai.STM.service.AccountService;
 import com.pai.STM.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.Optional;
 public class MainController {
 
     AccountService accountService;
-    public TaskService taskService;
+    TaskService taskService;
 
     @Autowired
     public MainController(AccountService accountService, TaskService taskService) {
@@ -41,7 +43,6 @@ public class MainController {
 
     @PostMapping(value = "/account")
     public void createAccount(@RequestBody Account acc) {
-        System.out.println(acc.getPassword()+","+acc.getName());
         accountService.createAccount(new Account(acc.getName(), acc.getLastName(), acc.getEmail(), acc.getPassword()));
     }
 
@@ -61,11 +62,34 @@ public class MainController {
 
     @GetMapping(value = "/account/email={email}")
     public Account findAccountByEmail(@PathVariable("email") String email) {
-        Optional foundAccount = accountService.findByEmail(email);
+        Optional<Account> foundAccount = accountService.findByEmail(email);
         if (!foundAccount.isPresent()) {
             return null;
         }
         return (Account) foundAccount.get();
+    }
+
+    @GetMapping(value = "/account")
+    public List<Account> getAccount(
+            @RequestParam("accountId") Optional<Integer> id,
+            @RequestParam("email") Optional<String> email
+    ) {
+        return accountService.getAccount(id,email);
+    }
+
+    @GetMapping(value = "/account/status")
+    public List<Account> getAccount(
+            @RequestParam("status") Boolean status
+    ) {
+        return accountService.getAccountsByStatus(status);
+    }
+
+    @PutMapping("/account/{id}")
+    public ResponseEntity<Void> updateAccount(@PathVariable Integer id,@RequestBody Account acc){
+        return accountService.findById(id).map(a-> {
+                accountService.setAccount(acc);
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            }).orElseGet(()-> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/account/status/id={id}")
@@ -110,11 +134,18 @@ public class MainController {
     @GetMapping(value = "/task")
     public List<Task> getTask(
             @RequestParam("name") Optional<String> name,
-            @RequestParam("status") Optional<Status> status,
-            @RequestParam("type") Optional<Type> type
+            @RequestParam("status") Optional<String> status,
+            @RequestParam("type") Optional<String> type
     ) {
 //        TODO should be splitted to 3 different methods?
-        return taskService.getTask(name, status, type);
+        if(name.get()!=""){
+            return taskService.getTaskByTitle(name.get());
+        }else if(status.get()!=""){
+            return taskService.getTaskByStatus(Status.valueOf(status.get()));
+        }else if(type.get()!="") {
+            return taskService.getTaskByType(Type.valueOf(type.get()));
+        }
+        return null;
     }
 
     @PutMapping(value = "/task/status")

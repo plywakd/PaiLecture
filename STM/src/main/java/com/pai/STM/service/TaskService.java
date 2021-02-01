@@ -36,15 +36,19 @@ public class TaskService {
         return null;
     }
 
-    public List<Task> getTask(Optional<String> name, Optional<Status> status, Optional<Type> type) {
-        if (name.isPresent()) {
-            return taskRepo.findByTitle(name.get());
-        } else if (status.isPresent()) {
-            return taskRepo.findByStatus(status.get());
-        } else if (type.isPresent()) {
-            return taskRepo.findByType(type.get());
+    public List<Task> getTaskByTitle(String name) {
+        if (name!="") {
+            return taskRepo.findByTitle(name);
         }
         return null;
+    }
+
+    public List<Task> getTaskByStatus(Status status) {
+        return taskRepo.findByStatus(status);
+    }
+
+    public List<Task> getTaskByType(Type type) {
+        return taskRepo.findByType(type);
     }
 
     public String changeStatus(Integer id, Status status) {

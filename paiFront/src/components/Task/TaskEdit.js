@@ -57,6 +57,7 @@ class TaskEdit extends React.Component{
 		axios.post(backend_url, params, config)
 			.then(response => {
 				console.log(response.status);
+				response.status == "200" ? alert("Added record to Database") : alert("Could not saved record to Database");
 			});
 	}
 	
@@ -147,7 +148,7 @@ class TaskEdit extends React.Component{
 							</Form.Control>
 						</Form.Group>
 
-						<Button variant="primary" type="submit" onClick={this.handleAdd} data-onclickparam={"projects"}>
+						<Button variant="primary" type="submit" onClick={this.handleAdd}>
 							Add
 						</Button>
 					</Form>;

@@ -48,6 +48,7 @@ class AccountEdit extends React.Component{
 		axios.post(backend_url, params, config)
 			.then(response => {
 				console.log(response.status);
+				response.status == "200" ? alert("Added record to Database") : alert("Could not saved record to Database");
 			});
 	}
 	
