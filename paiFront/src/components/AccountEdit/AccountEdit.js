@@ -43,7 +43,8 @@ class AccountEdit extends React.Component{
 				"lastName": this.state.accountLastName,
 				"email": this.state.email,
 				"password" : this.state.password,
-			}
+			};
+		console.log(params);
 		axios.post(backend_url, params, config)
 			.then(response => {
 				console.log(response.status);

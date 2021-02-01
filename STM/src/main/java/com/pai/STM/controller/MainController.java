@@ -1,5 +1,7 @@
 package com.pai.STM.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pai.STM.model.Account;
 import com.pai.STM.model.Status;
 import com.pai.STM.model.Task;
@@ -7,6 +9,7 @@ import com.pai.STM.model.Type;
 import com.pai.STM.service.AccountService;
 import com.pai.STM.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class MainController {
 
     @PostMapping(value = "/account")
     public void createAccount(@RequestBody Account acc) {
+        System.out.println(acc.getPassword()+","+acc.getName());
         accountService.createAccount(new Account(acc.getName(), acc.getLastName(), acc.getEmail(), acc.getPassword()));
     }
 
@@ -90,12 +94,17 @@ public class MainController {
 //    ) {
 //        return taskService.createTask(title, description, type, status, accountId);
 //    }
+
+    @PostMapping(value = "/task/{accountId}")
+    public Task createNewTask(@PathVariable Integer accountId, @RequestBody Task task) {
+        return taskService.createTask(
+                task.getTitle(), task.getDescription(), task.getType(), task.getStatus(),accountId);
+    }
+
     @PostMapping(value = "/task")
     public Task createNewTask(@RequestBody Task task) {
-        System.out.println(task.getStatus());
         return taskService.createTask(
-                task.getTitle(), task.getDescription(), task.getType(), task.getStatus(),
-                task.getAssignedAccount().getAccountId());
+                task.getTitle(), task.getDescription(), task.getType(), task.getStatus(),task.getAssignedAccount().getAccountId());
     }
 
     @GetMapping(value = "/task")
@@ -130,10 +139,10 @@ public class MainController {
 
     @GetMapping(value="/task/types")
     public List<String> getTaskTypes(){
-        System.out.println(Type.values());
         List<Type> typeEnums = Arrays.asList(Type.values());
         List<String> types = new ArrayList<>();
         typeEnums.forEach(type-> types.add(type.toString()));
         return types;
     }
+
 }

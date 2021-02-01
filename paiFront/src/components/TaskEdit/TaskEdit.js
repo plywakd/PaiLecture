@@ -11,20 +11,23 @@ class TaskEdit extends React.Component{
 			title: "",
 			description: "",
 			type: "",
-			status:false,
-			accountId:"",
-			types:[],
-			statuses:[],
+			status: "",
+			accountId: "",
+			types: [],
+			statuses: [],
+			accounts: [],
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.handleAdd = this.handleAdd.bind(this);
 		this.getTaskStatuses = this.getTaskStatuses.bind(this);
 		this.getTaskTypes = this.getTaskTypes.bind(this);
+		this.getAccounts = this.getAccounts.bind(this);
 	}
 	
 	componentDidMount(){
 		this.getTaskStatuses();
 		this.getTaskTypes();
+		this.getAccounts();
 	}
 	
 	handleChange(event) {
@@ -38,7 +41,7 @@ class TaskEdit extends React.Component{
 	
 	handleAdd(event) {
 		event.preventDefault();
-		const backend_url = 'http://localhost:8081/task';
+		const backend_url = 'http://localhost:8081/task/'+this.state.accountId;
 		let config = {
 			headers: { 
 				"Access-Control-Allow-Origin": "*",
@@ -48,9 +51,8 @@ class TaskEdit extends React.Component{
 		let params = {
 				"title":this.state.title,
 				"description": this.state.description,
-				"type": this.state.email,
+				"type": this.state.type,
 				"status" : this.state.status,
-				"account" : this.state.accountId,
 			}
 		axios.post(backend_url, params, config)
 			.then(response => {
@@ -67,7 +69,7 @@ class TaskEdit extends React.Component{
 		})
 		.then((response) =>{
 			if(response.status == '200'){
-				this.setState({statuses: response.data});
+				this.setState({statuses: response.data}, () => this.setState({status: response.data[0]}));
 			}
 		}).catch((error) =>{
 			console.log(error);
@@ -84,7 +86,23 @@ class TaskEdit extends React.Component{
 		})
 		.then((response) =>{
 			if(response.status == '200'){
-				this.setState({types: response.data});
+				this.setState({types: response.data},() => this.setState({type: response.data[0]}));
+			}
+		}).catch((error) =>{
+			console.log(error);
+		})
+	}
+	
+	getAccounts() {
+		const backend_url = 'http://localhost:8081/accounts';
+		axios.get(backend_url, {
+			params: {
+				
+			}
+		})
+		.then((response) =>{
+			if(response.status == '200'){
+				this.setState({accounts: response.data},() => this.setState({accountId: response.data[0].accountId}));
 			}
 		}).catch((error) =>{
 			console.log(error);
@@ -112,8 +130,6 @@ class TaskEdit extends React.Component{
 							)}
 							</Form.Control>
 						</Form.Group>
-	  
-	  
 						<Form.Group controlId="formTaskStatus">
 							<Form.Label>Status</Form.Label>
 							<Form.Control as="select" name="status" onChange={this.handleChange}>
@@ -123,8 +139,12 @@ class TaskEdit extends React.Component{
 							</Form.Control>
 						</Form.Group>
 						<Form.Group controlId="formTaskAccountId">
-							<Form.Label>Assigned account ID</Form.Label>
-							<Form.Control type="number" name="accountId" onChange={this.handleChange}/>
+							<Form.Label>Assign to account:</Form.Label>
+							<Form.Control as="select" name="accountId" onChange={this.handleChange}>
+							{this.state.accounts.map((type,i) =>
+								<option key={i} value={type.accountId}>{type.name+" "+type.lastName}</option>
+							)}
+							</Form.Control>
 						</Form.Group>
 
 						<Button variant="primary" type="submit" onClick={this.handleAdd} data-onclickparam={"projects"}>
